@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список ивентов в БисФД</title>
+    <link rel="stylesheet" href="https://assets.bisfd.ru/css/styles.css">
+</head>
+<body>
+    <header>
+        <img src="https://assets.bisfd.ru/logo.png" alt="Логотип" class="logo">
+        <h1>Ивенты в БисФД</h1>
+    </header>
+
+    <main>
+        <section id="events-list">
+            <p>Загрузка ивентов...</p>
+        </section>
+    </main>
+
+    <script>
+        // Подгружаем JSON с событиями
+        fetch('events.json')
+            .then(response => response.json())
+            .then(data => {
+                const eventsContainer = document.getElementById('events-list');
+                eventsContainer.innerHTML = ''; // Очищаем лоадер
+
+                if (data.length === 0) {
+                    eventsContainer.innerHTML = '<p>Ивентов нет.</p>';
+                    return;
+                }
+
+                data.forEach(event => {
+                    const eventCard = document.createElement('div');
+                    eventCard.className = 'event-card';
+                    eventCard.innerHTML = `
+                        <h2>${event.title}</h2>
+                        <p><strong>Дата:</strong> ${event.date}</p>
+                        <p>${event.description}</p>
+                    `;
+                    eventsContainer.appendChild(eventCard);
+                });
+            })
+            .catch(error => {
+                document.getElementById('events-list').innerHTML = '<p>Ошибка загрузки событий.</p>';
+                console.error('Ошибка:', error);
+            });
+    </script>
+</body>
+</html>
